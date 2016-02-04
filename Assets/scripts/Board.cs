@@ -1,15 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Board : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+public class Board {
+	List<Lane> _lanes;
 	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
