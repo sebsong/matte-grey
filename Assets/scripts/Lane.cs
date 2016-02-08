@@ -2,8 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class Lane {
-	List<Key> _keys;
-	bool isActive;
-	
+public class Lane {
+	private List<Key> _keys;
+	private bool isActive;
+	private float speed;
+	private int index;
+
+	public bool IsActive { get; set; }
+	public float Speed { get; }
+
+	public Lane(float speed) {
+		_keys = new List<Key> ();
+		this.speed = speed;
+	}
+
+	public void AddKey(Key key) {
+		_keys.Add (key);
+	}
+
+	public bool HasNext() {
+		return index > _keys.Count - 1;
+	}
+
+	public Key Next() {
+		return _keys [index++];
+	}
 }

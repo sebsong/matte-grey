@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Key {
-	private string spellWord;
+public abstract class Key{
+	string text;
+	public string Text{get;}
 
-	public void CastSpell() {
+	protected Key(string text) {
+		this.text = text;
 	}
+
+	public abstract void CastSpell();
 }
