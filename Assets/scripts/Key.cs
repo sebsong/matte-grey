@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class Key{
 	string text;
-	public string Text{get;}
+	public string Text { get; private set; }
 
 	protected Key(string text) {
 		this.text = text;

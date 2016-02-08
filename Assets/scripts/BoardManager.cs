@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviour {
 
 	/* Parse STORY and return a list of keys. */
 	List<Key> ParseStory(string story) {
+		return null;
 	}
 
 	/* Fill _LANES with KEYS. */

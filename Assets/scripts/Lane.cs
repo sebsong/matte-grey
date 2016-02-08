@@ -9,7 +9,7 @@ public class Lane {
 	private int index;
 
 	public bool IsActive { get; set; }
-	public float Speed { get; }
+	public float Speed { get; private set; }
 
 	public Lane(float speed) {
 		_keys = new List<Key> ();
@@ -24,7 +24,11 @@ public class Lane {
 		return index > _keys.Count - 1;
 	}
 
-	public Key Next() {
-		return _keys [index++];
+	public Key Peek() {
+		return _keys [index];
+	}
+
+	public void Next() {
+		index++;
 	}
 }
