@@ -20,15 +20,18 @@ public class Lane {
 		_keys.Add (key);
 	}
 
-	public bool HasNext() {
-		return index > _keys.Count - 1;
+	public List<Key> GetKeys() {
+		return _keys;
 	}
-
-	public Key Peek() {
-		return _keys [index];
-	}
-
-	public void Next() {
-		index++;
-	}
+//	public bool HasNext() {
+//		return index > _keys.Count - 1;
+//	}
+//
+//	public Key Peek() {
+//		return _keys [index];
+//	}
+//
+//	public void Next() {
+//		index++;
+//	}
 }

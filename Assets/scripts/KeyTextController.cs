@@ -7,7 +7,7 @@ public class KeyTextController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		textMeshRenderer = gameObject.GetComponent<MeshRenderer> ();
-		textMeshRenderer.sortingOrder = 2;
+		textMeshRenderer.sortingOrder = 3;
 	}
 	
 	// Update is called once per frame
