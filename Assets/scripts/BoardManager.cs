@@ -7,7 +7,7 @@ public class BoardManager : MonoBehaviour {
 	public Transform lane;
 	public Transform key;
 
-	private List<Lane> _lanes;
+	private List<GameObject> _lanes;
 	private SpriteRenderer boardSR;
 	private float boardWidth;
 	private float boardHeight;
@@ -16,7 +16,7 @@ public class BoardManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_lanes = new List<Lane> ();
+		_lanes = new List<GameObject> ();
 		SpriteRenderer boardSR = GetComponent<SpriteRenderer> ();
 		boardWidth = boardSR.bounds.size.x;
 		boardHeight = boardSR.bounds.size.y;
@@ -24,14 +24,14 @@ public class BoardManager : MonoBehaviour {
 		boardScaleY = transform.localScale.y;
 
 		for (int i = 0; i < 3; i++) {
-			_lanes.Add (new Lane (i));
+			_lanes.Add (Instantiate(lane, Vector3.zero, Quaternion.identity));
 		}
 
 		string s1 = "potatoadsfadsfdsafdsklafjklsdafjlkdsajflkasdjlkfjsdlkjfklsdjladsf";
 		foreach (Lane l in _lanes) {
 			for (int i = 0; i < 10; i++) {
 				if (i + i < s1.Length)
-				l.AddKey (new NormalKey (s1.Substring(i, i)));
+					l.AddKey (Instantiate(key, Vector3.zero, Quaternion.identity));
 			}
 		}
 		PositionPieces ();
@@ -57,24 +57,25 @@ public class BoardManager : MonoBehaviour {
 		float keyOffset = 0.5f;
 		Vector3 lanePos = transform.position + (Vector3.up * ((laneHeight - boardHeight) / 2));
 
-		foreach (Lane l in _lanes) {
-			Transform newLane = (Transform) Instantiate (lane, lanePos, Quaternion.identity);
-			newLane.localScale = new Vector3 (laneScaleX, laneScaleY);
-			List<Key> laneKeys = l.GetKeys ();
+		foreach (Transform l in _lanes) {
+			l.position = lanePos;
+			l.localScale = new Vector3 (laneScaleX, laneScaleY);
+			List<GameObject> laneKeys = l.GetComponent<Lane> ().Keys;
 
-			Vector3 keyPos = newLane.position + (Vector3.right * ((laneWidth) / 2 - keyOffset)) ;
+			Vector3 keyPos = l.position + (Vector3.right * ((laneWidth) / 2 - keyOffset)) ;
 
-			foreach (Key k in laneKeys) {
+			foreach (Transform k in laneKeys) {
+				Key key = k.GetComponent<Key> ();
 
-				Transform newKey = (Transform)Instantiate (key, keyPos, Quaternion.identity);
+				k.position = keyPos;
 
-				TextMesh keyText = newKey.GetComponent<TextMesh> ();
+				TextMesh keyText = k.GetComponent<TextMesh> ();
 
-				keyText.text = k.Text;
+				keyText.text = key.Text;
 
-				float textWidth = keyText.characterSize * k.Text.Length;
+				float textWidth = keyText.characterSize * key.Text.Length;
 
-				Transform background = newKey.GetChild (0);
+				Transform background = k.GetChild (0);
 
 				float oldBackgroundWidth = background.GetComponent<SpriteRenderer> ().bounds.size.x;
 

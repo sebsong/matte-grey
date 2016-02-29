@@ -2,36 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Lane {
-	private List<Key> _keys;
-	private bool isActive;
-	private float speed;
-	private int index;
+public interface Lane {
 
-	public bool IsActive { get; set; }
-	public float Speed { get; private set; }
+	/* Keys in the lane */
+	List<Transform> Keys { get; }
 
-	public Lane(float speed) {
-		_keys = new List<Key> ();
-		this.speed = speed;
-	}
+	/* Whether keys are typable in this lane */
+	bool IsActive { get; }
 
-	public void AddKey(Key key) {
-		_keys.Add (key);
-	}
+	/* Speed of the keys in the lane */
+	float Speed { get; }
 
-	public List<Key> GetKeys() {
-		return _keys;
-	}
-//	public bool HasNext() {
-//		return index > _keys.Count - 1;
-//	}
-//
-//	public Key Peek() {
-//		return _keys [index];
-//	}
-//
-//	public void Next() {
-//		index++;
-//	}
+	/* Adds KEY to the list of keys */
+	void AddKey (GameObject key);
+
 }

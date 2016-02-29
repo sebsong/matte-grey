@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Key{
-	public string Text { get; private set; }
+public interface Key {
+	/* Text to type */
+	string Text { get; }
 
-	protected Key(string text) {
-		Text = text;
-	}
-
-	public abstract void CastSpell();
+	/* Effect when typed */
+	void CastSpell();
 }

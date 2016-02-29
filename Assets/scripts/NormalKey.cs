@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NormalKey : Key {
+public class NormalKey : MonoBehaviour, Key {
 
-	public NormalKey(string text) : base(text) {
+	public string Text { get; set; }
+
+	public void CastSpell() {
+		/* Do nothing */
 	}
 
-	public override void CastSpell() {
-		/* Do nothing */
+	public void Update() {
 	}
 }
