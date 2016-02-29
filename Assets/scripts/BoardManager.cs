@@ -27,10 +27,11 @@ public class BoardManager : MonoBehaviour {
 			_lanes.Add (new Lane (i));
 		}
 
-		string s1 = "potato";
+		string s1 = "potatoadsfadsfdsafdsklafjklsdafjlkdsajflkasdjlkfjsdlkjfklsdjladsf";
 		foreach (Lane l in _lanes) {
-			for (int i = 0; i < 5; i++) {
-				l.AddKey (new NormalKey ("hi"));
+			for (int i = 0; i < 10; i++) {
+				if (i + i < s1.Length)
+				l.AddKey (new NormalKey (s1.Substring(i, i)));
 			}
 		}
 		PositionPieces ();
@@ -53,9 +54,6 @@ public class BoardManager : MonoBehaviour {
 		float laneScaleX = boardScaleX;
 		float laneScaleY = boardScaleY / numLanes;
 
-		float keySize = 0.8f * laneHeight;
-
-		float keyScale = 0.5f * laneScaleY;
 		float keyOffset = 0.5f;
 		Vector3 lanePos = transform.position + (Vector3.up * ((laneHeight - boardHeight) / 2));
 
@@ -64,14 +62,31 @@ public class BoardManager : MonoBehaviour {
 			newLane.localScale = new Vector3 (laneScaleX, laneScaleY);
 			List<Key> laneKeys = l.GetKeys ();
 
-			Vector3 keyPos = newLane.position + (Vector3.right * ((laneWidth + keySize) / 2 - keyOffset)) ;
+			Vector3 keyPos = newLane.position + (Vector3.right * ((laneWidth) / 2 - keyOffset)) ;
 
 			foreach (Key k in laneKeys) {
+
 				Transform newKey = (Transform)Instantiate (key, keyPos, Quaternion.identity);
-				newKey.localScale = new Vector3 (keyScale, keyScale);
-				print (k.Text);
-				newKey.GetChild (0).GetComponent<TextMesh> ().text = k.Text;
-				keyPos += Vector3.right * (keySize + keyOffset);
+
+				TextMesh keyText = newKey.GetComponent<TextMesh> ();
+
+				keyText.text = k.Text;
+
+				float textWidth = keyText.characterSize * k.Text.Length;
+
+				Transform background = newKey.GetChild (0);
+
+				float oldBackgroundWidth = background.GetComponent<SpriteRenderer> ().bounds.size.x;
+
+				float backgroundWidth = textWidth * 0.6f;
+				float backgroundHeight = 0.8f * laneHeight;
+
+				float backgroundScaleX = (backgroundWidth / oldBackgroundWidth) * background.localScale.x;
+				float backgroundScaleY = 0.8f * laneScaleY;
+
+				background.localScale = new Vector3 (backgroundScaleX, backgroundScaleY);
+
+				keyPos += Vector3.right * (background.GetComponent<SpriteRenderer>().bounds.size.x + keyOffset);
 			}
 
 			lanePos += Vector3.up * laneHeight;

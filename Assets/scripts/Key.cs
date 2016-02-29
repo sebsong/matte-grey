@@ -5,7 +5,7 @@ public abstract class Key{
 	public string Text { get; private set; }
 
 	protected Key(string text) {
-		Text = Text;
+		Text = text;
 	}
 
 	public abstract void CastSpell();
