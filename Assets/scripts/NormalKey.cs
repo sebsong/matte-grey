@@ -7,6 +7,7 @@ public class NormalKey : MonoBehaviour, Key {
 
 	public void CastSpell() {
 		/* Do nothing */
+		gameObject.SetActive (false);
 	}
 
 	public void Update() {

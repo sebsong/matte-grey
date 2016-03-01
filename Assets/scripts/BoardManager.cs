@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour {
 	/* Lane and Key prefab */
-	public Transform lane;
-	public Transform key;
+	public GameObject lane;
+	public GameObject key;
+	private Text inputDisplay;
 
 	private List<GameObject> _lanes;
+	private StringBuilder inputText;
+
 	private SpriteRenderer boardSR;
 	private float boardWidth;
 	private float boardHeight;
@@ -17,21 +22,29 @@ public class BoardManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_lanes = new List<GameObject> ();
+		inputText = new StringBuilder ();
+		inputDisplay = GameObject.Find ("InputDisplay").GetComponent<Text> ();
+
 		SpriteRenderer boardSR = GetComponent<SpriteRenderer> ();
 		boardWidth = boardSR.bounds.size.x;
 		boardHeight = boardSR.bounds.size.y;
 		boardScaleX = transform.localScale.x;
 		boardScaleY = transform.localScale.y;
 
-		for (int i = 0; i < 3; i++) {
-			_lanes.Add (Instantiate(lane, Vector3.zero, Quaternion.identity));
+		/* Sample data */
+		for (int i = 0; i < 7; i++) {
+			_lanes.Add ((GameObject) Instantiate(lane, Vector3.zero, Quaternion.identity));
 		}
 
 		string s1 = "potatoadsfadsfdsafdsklafjklsdafjlkdsajflkasdjlkfjsdlkjfklsdjladsf";
-		foreach (Lane l in _lanes) {
+		foreach (GameObject l in _lanes) {
 			for (int i = 0; i < 10; i++) {
-				if (i + i < s1.Length)
-					l.AddKey (Instantiate(key, Vector3.zero, Quaternion.identity));
+				int len = (int) (Random.value * 7);
+				if (i + len < s1.Length && len > 0) {
+					GameObject temp = (GameObject)Instantiate (key, Vector3.zero, Quaternion.identity);
+					print (s1.Substring (i, len));
+					l.GetComponent<Lane> ().AddKey (temp, s1.Substring (i, len));
+				}
 			}
 		}
 		PositionPieces ();
@@ -39,8 +52,23 @@ public class BoardManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		foreach (char c in Input.inputString) {
-			print (c);
+		inputDisplay.text = inputText.ToString ();
+		if (Input.GetKeyDown ("enter") || Input.GetKeyDown ("return")) {
+			foreach (GameObject l in _lanes) {
+				Lane lane = l.GetComponent<Lane> ();
+				if (lane.IsActive) {
+					lane.CheckKey (inputText.ToString ());
+				}
+			}
+			inputText.Length = 0;
+		} else if (Input.GetKeyDown("backspace") || Input.GetKeyDown("delete")) {
+			if (inputText.Length > 0) {
+				inputText.Remove (inputText.Length - 1, 1);
+			}
+		} else {
+			foreach (char c in Input.inputString) {
+				inputText.Append (c);
+			}
 		}
 	}
 
@@ -57,17 +85,17 @@ public class BoardManager : MonoBehaviour {
 		float keyOffset = 0.5f;
 		Vector3 lanePos = transform.position + (Vector3.up * ((laneHeight - boardHeight) / 2));
 
-		foreach (Transform l in _lanes) {
-			l.position = lanePos;
-			l.localScale = new Vector3 (laneScaleX, laneScaleY);
+		foreach (GameObject l in _lanes) {
+			l.transform.position = lanePos;
+			l.transform.localScale = new Vector3 (laneScaleX, laneScaleY);
 			List<GameObject> laneKeys = l.GetComponent<Lane> ().Keys;
 
-			Vector3 keyPos = l.position + (Vector3.right * ((laneWidth) / 2 - keyOffset)) ;
+			Vector3 keyPos = l.transform.position + (Vector3.right * ((laneWidth) / 2 - keyOffset)) ;
 
-			foreach (Transform k in laneKeys) {
+			foreach (GameObject k in laneKeys) {
 				Key key = k.GetComponent<Key> ();
 
-				k.position = keyPos;
+				k.transform.position = keyPos;
 
 				TextMesh keyText = k.GetComponent<TextMesh> ();
 
@@ -75,12 +103,11 @@ public class BoardManager : MonoBehaviour {
 
 				float textWidth = keyText.characterSize * key.Text.Length;
 
-				Transform background = k.GetChild (0);
+				Transform background = k.transform.GetChild (0);
 
 				float oldBackgroundWidth = background.GetComponent<SpriteRenderer> ().bounds.size.x;
 
 				float backgroundWidth = textWidth * 0.6f;
-				float backgroundHeight = 0.8f * laneHeight;
 
 				float backgroundScaleX = (backgroundWidth / oldBackgroundWidth) * background.localScale.x;
 				float backgroundScaleY = 0.8f * laneScaleY;

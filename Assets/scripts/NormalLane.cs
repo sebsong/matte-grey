@@ -1,27 +1,42 @@
 ﻿using UnityEngine;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
 public class NormalLane : MonoBehaviour, Lane {
-	public List<GameObject> Keys { get; private set; }
-	public bool IsActive { get; private set; }
-	public float Speed { get; private set; }
+	public List<GameObject> Keys { get; set; }
+	public bool IsActive { get; set; }
+	public float Speed { get; set; }
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		Keys = new List<GameObject> ();
-		Speed = 3f;
+		Speed = 0.75f;
+		IsActive = true;
 	}
 
-	public void AddKey(GameObject key) {
+	public void AddKey(GameObject key, string text) {
 		Keys.Add (key);
+		key.GetComponent<Key> ().Text = text;
+	}
+
+	public void CheckKey (string input) {
+		if (Keys.Count > 0) {
+			Key fringeKey = Keys [0].GetComponent<Key>();
+//			print (input + ", " + fringeKey.Text + ": " + (input.Equals(fringeKey.Text)));
+//			print (input.Length + ":" + fringeKey.Text.Length);
+			if (input.Equals (fringeKey.Text)) {
+				Keys.RemoveAt (0);
+				fringeKey.CastSpell ();
+			}
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		foreach (GameObject key in Keys) {
 			if (key.activeSelf) {
-				key.transform.position -= Vector2.left * Speed * Time.deltaTime;
+				key.transform.position += Vector3.left * Speed * Time.deltaTime;
 			}
 		}
 	}
