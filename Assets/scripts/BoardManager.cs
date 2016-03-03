@@ -8,8 +8,8 @@ using System.IO;
 
 public class BoardManager : MonoBehaviour {
 	/* Lane and Key prefab */
-	public GameObject lane;
-	public GameObject key;
+	public GameObject normalLane;
+	public GameObject normalKey;
 
 	public int numLanes;
 
@@ -36,20 +36,6 @@ public class BoardManager : MonoBehaviour {
 		boardScaleX = transform.localScale.x;
 		boardScaleY = transform.localScale.y;
 
-		/* Sample data */
-
-
-//		string s1 = "potatoadsfadsfdsafdsklafjklsdafjlkdsajflkasdjlkfjsdlkjfklsdjladsf";
-//		foreach (GameObject l in _lanes) {
-//			for (int i = 0; i < 10; i++) {
-//				int len = (int) (Random.value * 7);
-//				if (i + len < s1.Length && len > 0) {
-//					GameObject temp = (GameObject)Instantiate (key, Vector3.zero, Quaternion.identity);
-////					print (s1.Substring (i, len));
-//					l.GetComponent<Lane> ().AddKey (temp, s1.Substring (i, len));
-//				}
-//			}
-//		}
 		FillBoard ();
 		ParseStory ("Assets/stories/sample.txt");
 		PositionPieces ();
@@ -79,8 +65,6 @@ public class BoardManager : MonoBehaviour {
 
 	/* Instantiate the necessary lanes and keys and position them in the game board, resizing as necessary. */
 	void PositionPieces() {
-		int numLanes = _lanes.Count;
-
 		float laneWidth = boardWidth;
 		float laneHeight = boardHeight / numLanes;
 
@@ -132,7 +116,7 @@ public class BoardManager : MonoBehaviour {
 		string storyText = story.ReadToEnd ();
 		story.Close ();
 
-		Regex replaceReg = new Regex ("[.,()!?@#$%^&*]");
+		Regex replaceReg = new Regex ("[.,()!?@#$%^&*\n\r]");
 		storyText = replaceReg.Replace (storyText, " ");
 
 		string[] keyTexts = storyText.Split (new char[] {' '}, System.StringSplitOptions.RemoveEmptyEntries);
@@ -145,7 +129,7 @@ public class BoardManager : MonoBehaviour {
 		if (_lanes.Count > 0) {
 			foreach (string keyText in keyTexts) {
 				int laneIndex = Random.Range (0, _lanes.Count);
-				GameObject keyToAdd = (GameObject)Instantiate (key, Vector3.zero, Quaternion.identity);
+				GameObject keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
 				_lanes [laneIndex].GetComponent<Lane> ().AddKey (keyToAdd, keyText);
 			}
 		}
@@ -154,7 +138,7 @@ public class BoardManager : MonoBehaviour {
 	/* Fill _LANES with lanes */
 	void FillBoard() {
 		for (int i = 0; i < numLanes; i++) {
-			_lanes.Add ((GameObject) Instantiate(lane, Vector3.zero, Quaternion.identity));
+			_lanes.Add ((GameObject) Instantiate(normalLane, Vector3.zero, Quaternion.identity));
 		}
 	}
 }

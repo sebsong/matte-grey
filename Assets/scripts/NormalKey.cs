@@ -9,7 +9,4 @@ public class NormalKey : MonoBehaviour, Key {
 		/* Do nothing */
 		gameObject.SetActive (false);
 	}
-
-	public void Update() {
-	}
 }
