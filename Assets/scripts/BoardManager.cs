@@ -10,6 +10,7 @@ public class BoardManager : MonoBehaviour {
 	/* Lane and Key prefab */
 	public GameObject normalLane;
 	public GameObject normalKey;
+	public GameObject laneEnd;
 
 	public int numLanes;
 
@@ -37,7 +38,7 @@ public class BoardManager : MonoBehaviour {
 //		boardScaleY = transform.localScale.y;
 
 		FillBoard ();
-		ParseStory ("Assets/stories/sample.txt");
+		ParseStory ("Assets/stories/jackjill.txt");
 		PositionPieces ();
 	}
 	
@@ -65,16 +66,19 @@ public class BoardManager : MonoBehaviour {
 
 	/* Instantiate the necessary lanes and keys and position them in the game board, resizing as necessary. */
 	void PositionPieces() {
+
+		Instantiate(laneEnd, transform.position + Vector3.left * (boardWidth / 2), Quaternion.identity);
+
 		float newLaneWidth = boardWidth;
 		float newLaneHeight = boardHeight / numLanes;
-
-//		float laneScaleX = boardScaleX;
-//		float laneScaleY = boardScaleY / numLanes;
+		float laneSpacing = newLaneHeight / 6;
+		newLaneHeight = boardHeight / numLanes - laneSpacing;
 
 		float keyOffset = 0.5f;
 		float keyTopBotPadding = 0.25f;
 		float keyTextPadding = 0.5f;
-		Vector3 lanePos = transform.position + (Vector3.up * ((newLaneHeight - boardHeight) / 2));
+
+		Vector3 lanePos = transform.position + (Vector3.up * ((newLaneHeight - boardHeight + laneSpacing) / 2));
 
 		foreach (GameObject l in _lanes) {
 			SpriteRenderer laneSR = l.GetComponent<SpriteRenderer> ();
@@ -126,7 +130,7 @@ public class BoardManager : MonoBehaviour {
 				keyPos += Vector3.right * (newKeyBackgroundWidth / 2);
 			}
 
-			lanePos += Vector3.up * newLaneHeight;
+			lanePos += Vector3.up * (newLaneHeight + laneSpacing);
 		}
 	}
 
