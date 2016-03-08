@@ -11,7 +11,7 @@ public class NormalLane : MonoBehaviour, Lane {
 	// Use this for initialization
 	void Awake () {
 		Keys = new List<GameObject> ();
-		Speed = 0.75f;
+		Speed = 0.5f;
 		IsActive = true;
 	}
 
@@ -25,8 +25,6 @@ public class NormalLane : MonoBehaviour, Lane {
 	public void CheckKey (string input) {
 		if (Keys.Count > 0) {
 			Key fringeKey = Keys [0].GetComponent<Key>();
-//			print (input + ", " + fringeKey.Text + ": " + (input.Equals(fringeKey.Text)));
-//			print (input.Length + ":" + fringeKey.Text.Length);
 			if (input.Equals (fringeKey.Text)) {
 				Keys.RemoveAt (0);
 				fringeKey.CastSpell ();

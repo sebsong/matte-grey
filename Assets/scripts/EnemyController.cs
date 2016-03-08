@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		Health = 100;
 	}
 	
 	// Update is called once per frame

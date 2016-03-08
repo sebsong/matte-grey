@@ -22,8 +22,6 @@ public class BoardManager : MonoBehaviour {
 	private SpriteRenderer boardSR;
 	private float boardWidth;
 	private float boardHeight;
-//	private float boardScaleX;
-//	private float boardScaleY;
 
 	// Use this for initialization
 	void Start () {
@@ -34,8 +32,7 @@ public class BoardManager : MonoBehaviour {
 		SpriteRenderer boardSR = GetComponent<SpriteRenderer> ();
 		boardWidth = boardSR.bounds.size.x;
 		boardHeight = boardSR.bounds.size.y;
-//		boardScaleX = transform.localScale.x;
-//		boardScaleY = transform.localScale.y;
+
 
 		FillBoard ();
 		ParseStory ("Assets/stories/jackjill.txt");
@@ -88,7 +85,8 @@ public class BoardManager : MonoBehaviour {
 			l.transform.position = lanePos;
 			float newLaneWidthScale = newLaneWidth / laneWidth;
 			float newLaneHeightScale = newLaneHeight / laneHeight;
-			l.transform.localScale = new Vector3 (newLaneWidthScale * l.transform.localScale.x, newLaneHeightScale * l.transform.localScale.y);
+			l.transform.localScale = new Vector3 (newLaneWidthScale * l.transform.localScale.x,
+												newLaneHeightScale * l.transform.localScale.y);
 
 			Vector3 keyPos = Vector3.zero;
 
