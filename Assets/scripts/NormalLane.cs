@@ -17,7 +17,9 @@ public class NormalLane : MonoBehaviour, Lane {
 
 	public void AddKey(GameObject key, string text) {
 		Keys.Add (key);
-		key.GetComponent<Key> ().Text = text;
+		Key keyComponent = key.GetComponent<Key> ();
+		keyComponent.Text = text;
+		keyComponent.parentLane = this;
 	}
 
 	public void CheckKey (string input) {

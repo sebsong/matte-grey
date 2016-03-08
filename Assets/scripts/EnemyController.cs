@@ -13,4 +13,8 @@ public class EnemyController : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	public void TakeDamage(int dmg) {
+		Health -= dmg;
+	}
 }

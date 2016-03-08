@@ -21,8 +21,8 @@ public class BoardManager : MonoBehaviour {
 	private SpriteRenderer boardSR;
 	private float boardWidth;
 	private float boardHeight;
-	private float boardScaleX;
-	private float boardScaleY;
+//	private float boardScaleX;
+//	private float boardScaleY;
 
 	// Use this for initialization
 	void Start () {
@@ -33,8 +33,8 @@ public class BoardManager : MonoBehaviour {
 		SpriteRenderer boardSR = GetComponent<SpriteRenderer> ();
 		boardWidth = boardSR.bounds.size.x;
 		boardHeight = boardSR.bounds.size.y;
-		boardScaleX = transform.localScale.x;
-		boardScaleY = transform.localScale.y;
+//		boardScaleX = transform.localScale.x;
+//		boardScaleY = transform.localScale.y;
 
 		FillBoard ();
 		ParseStory ("Assets/stories/sample.txt");
@@ -65,48 +65,68 @@ public class BoardManager : MonoBehaviour {
 
 	/* Instantiate the necessary lanes and keys and position them in the game board, resizing as necessary. */
 	void PositionPieces() {
-		float laneWidth = boardWidth;
-		float laneHeight = boardHeight / numLanes;
+		float newLaneWidth = boardWidth;
+		float newLaneHeight = boardHeight / numLanes;
 
-		float laneScaleX = boardScaleX;
-		float laneScaleY = boardScaleY / numLanes;
+//		float laneScaleX = boardScaleX;
+//		float laneScaleY = boardScaleY / numLanes;
 
 		float keyOffset = 0.5f;
-		Vector3 lanePos = transform.position + (Vector3.up * ((laneHeight - boardHeight) / 2));
+		float keyTopBotPadding = 0.25f;
+		float keyTextPadding = 0.5f;
+		Vector3 lanePos = transform.position + (Vector3.up * ((newLaneHeight - boardHeight) / 2));
 
 		foreach (GameObject l in _lanes) {
+			SpriteRenderer laneSR = l.GetComponent<SpriteRenderer> ();
+			float laneWidth = laneSR.bounds.size.x;
+			float laneHeight = laneSR.bounds.size.y;
+
 			l.transform.position = lanePos;
-			l.transform.localScale = new Vector3 (laneScaleX, laneScaleY);
+			float newLaneWidthScale = newLaneWidth / laneWidth;
+			float newLaneHeightScale = newLaneHeight / laneHeight;
+			l.transform.localScale = new Vector3 (newLaneWidthScale * l.transform.localScale.x, newLaneHeightScale * l.transform.localScale.y);
+
+			Vector3 keyPos = Vector3.zero;
+
 			List<GameObject> laneKeys = l.GetComponent<Lane> ().Keys;
 
-			Vector3 keyPos = l.transform.position + (Vector3.right * ((laneWidth) / 2 - keyOffset)) ;
-
 			foreach (GameObject k in laneKeys) {
+				Transform keyBackground = k.transform.GetChild (0);
 				Key key = k.GetComponent<Key> ();
-
-				k.transform.position = keyPos;
-
+				SpriteRenderer keyBackgroundSR = keyBackground.GetComponent<SpriteRenderer> ();
 				TextMesh keyText = k.GetComponent<TextMesh> ();
+				MeshRenderer keyMeshRenderer = k.GetComponent<MeshRenderer> ();
+				BoxCollider2D keyCollider = k.GetComponent<BoxCollider2D> ();
+
+				float keyBackgroundWidth = keyBackgroundSR.bounds.size.x;
+				float keyBackgroundHeight = keyBackgroundSR.bounds.size.y;
 
 				keyText.text = key.Text;
 
-				float textWidth = keyText.characterSize * key.Text.Length;
+				float textWidth = keyMeshRenderer.bounds.size.x + keyTextPadding;
 
-				Transform background = k.transform.GetChild (0);
+				float newKeyBackgroundWidth = textWidth + keyTextPadding;
+				float newKeyBackgroundHeight = newLaneHeight - keyTopBotPadding;
 
-				float oldBackgroundWidth = background.GetComponent<SpriteRenderer> ().bounds.size.x;
+				if (keyPos == Vector3.zero) {
+					keyPos = l.transform.position + (Vector3.right * ((laneWidth + newKeyBackgroundWidth) / 2));
+				} else {
+					keyPos += Vector3.right * (newKeyBackgroundWidth / 2 + keyOffset);
+				}
 
-				float backgroundWidth = textWidth * 0.6f;
+				k.transform.position = keyPos;
+				float newKeyBackgroundWidthScale = newKeyBackgroundWidth / keyBackgroundWidth;
+				float newKeyBackgroundHeightScale = newKeyBackgroundHeight / keyBackgroundHeight;
+				keyBackground.localScale = new Vector3 (newKeyBackgroundWidthScale * keyBackground.localScale.x,
+														newKeyBackgroundHeightScale * keyBackground.localScale.y);
+				print (newKeyBackgroundWidth + ":" + newKeyBackgroundHeight);
+				keyCollider.size = new Vector2 (newKeyBackgroundWidth, newKeyBackgroundHeight) * 2;
+				print (keyCollider.size);
 
-				float backgroundScaleX = (backgroundWidth / oldBackgroundWidth) * background.localScale.x;
-				float backgroundScaleY = 0.8f * laneScaleY;
-
-				background.localScale = new Vector3 (backgroundScaleX, backgroundScaleY);
-
-				keyPos += Vector3.right * (background.GetComponent<SpriteRenderer>().bounds.size.x + keyOffset);
+				keyPos += Vector3.right * (newKeyBackgroundWidth / 2);
 			}
 
-			lanePos += Vector3.up * laneHeight;
+			lanePos += Vector3.up * newLaneHeight;
 		}
 	}
 
