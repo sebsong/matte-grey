@@ -109,7 +109,9 @@ public class BoardManager : MonoBehaviour {
 				float newKeyBackgroundHeight = newLaneHeight - keyTopBotPadding;
 
 				if (keyPos == Vector3.zero) {
-					keyPos = l.transform.position + (Vector3.right * ((laneWidth + newKeyBackgroundWidth) / 2));
+					keyPos = l.transform.position + (Vector3.right * ((newLaneWidth + newKeyBackgroundWidth) / 2));
+					print (keyPos);
+					print (laneWidth);
 				} else {
 					keyPos += Vector3.right * (newKeyBackgroundWidth / 2 + keyOffset);
 				}
@@ -119,9 +121,7 @@ public class BoardManager : MonoBehaviour {
 				float newKeyBackgroundHeightScale = newKeyBackgroundHeight / keyBackgroundHeight;
 				keyBackground.localScale = new Vector3 (newKeyBackgroundWidthScale * keyBackground.localScale.x,
 														newKeyBackgroundHeightScale * keyBackground.localScale.y);
-				print (newKeyBackgroundWidth + ":" + newKeyBackgroundHeight);
-				keyCollider.size = new Vector2 (newKeyBackgroundWidth, newKeyBackgroundHeight) * 2;
-				print (keyCollider.size);
+				keyCollider.size = new Vector2 (newKeyBackgroundWidth, newKeyBackgroundHeight) * 2.25f;
 
 				keyPos += Vector3.right * (newKeyBackgroundWidth / 2);
 			}
