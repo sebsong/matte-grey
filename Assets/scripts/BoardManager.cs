@@ -112,8 +112,6 @@ public class BoardManager : MonoBehaviour {
 
 				if (keyPos == Vector3.zero) {
 					keyPos = l.transform.position + (Vector3.right * ((newLaneWidth + newKeyBackgroundWidth) / 2));
-					print (keyPos);
-					print (laneWidth);
 				} else {
 					keyPos += Vector3.right * (newKeyBackgroundWidth / 2 + keyOffset);
 				}
