@@ -47,7 +47,7 @@ public class BoardManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		inputDisplay.text = inputText.ToString ();
-		if (Input.GetKeyDown ("enter") || Input.GetKeyDown ("return")) {
+		if (Input.GetKeyDown ("enter") || Input.GetKeyDown ("return") || Input.GetKeyDown("space")) {
 			foreach (GameObject l in _lanes) {
 				Lane lane = l.GetComponent<Lane> ();
 				if (lane.IsActive) {
@@ -155,13 +155,13 @@ public class BoardManager : MonoBehaviour {
 		if (_lanes.Count > 0) {
 			foreach (string keyText in keyTexts) {
 				int laneIndex = Random.Range (0, _lanes.Count);
-				if (laneIndex % 3 == 0) {
+				if (laneIndex % 2 == 0) {
 					keyToAdd = (GameObject)Instantiate (dmgKey, Vector3.zero, Quaternion.identity);
-				} else if (laneIndex % 3 == 1) {
+				} else{ //if (laneIndex % 3 == 1) {
 					keyToAdd = (GameObject)Instantiate (healKey, Vector3.zero, Quaternion.identity);
-				} else {
-					keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
-				}
+				} //else {
+//					keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
+//				}
 				_lanes [laneIndex].GetComponent<Lane> ().AddKey (keyToAdd, keyText);
 			}
 		}

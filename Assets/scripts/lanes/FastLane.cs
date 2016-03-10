@@ -10,7 +10,7 @@ public class FastLane : MonoBehaviour, Lane {
 	// Use this for initialization
 	void Awake () {
 		Keys = new List<GameObject> ();
-		Speed = 1.25f;
+		Speed = 1f;
 		IsActive = true;
 	}
 
