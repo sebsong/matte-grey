@@ -9,7 +9,12 @@ using System.IO;
 public class BoardManager : MonoBehaviour {
 	/* Lane and Key prefab */
 	public GameObject normalLane;
+	public GameObject fastLane;
+
 	public GameObject normalKey;
+	public GameObject dmgKey;
+	public GameObject healKey;
+
 	public GameObject laneEnd;
 
 	public int numLanes;
@@ -146,10 +151,17 @@ public class BoardManager : MonoBehaviour {
 
 	/* Fill each lane in _LANES with KEYS. */
 	void FillLanes(string[] keyTexts) {
+		GameObject keyToAdd;
 		if (_lanes.Count > 0) {
 			foreach (string keyText in keyTexts) {
 				int laneIndex = Random.Range (0, _lanes.Count);
-				GameObject keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
+				if (laneIndex % 3 == 0) {
+					keyToAdd = (GameObject)Instantiate (dmgKey, Vector3.zero, Quaternion.identity);
+				} else if (laneIndex % 3 == 1) {
+					keyToAdd = (GameObject)Instantiate (healKey, Vector3.zero, Quaternion.identity);
+				} else {
+					keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
+				}
 				_lanes [laneIndex].GetComponent<Lane> ().AddKey (keyToAdd, keyText);
 			}
 		}
@@ -157,8 +169,14 @@ public class BoardManager : MonoBehaviour {
 
 	/* Fill _LANES with lanes */
 	void FillBoard() {
+		GameObject laneToAdd;
 		for (int i = 0; i < numLanes; i++) {
-			_lanes.Add ((GameObject) Instantiate(normalLane, Vector3.zero, Quaternion.identity));
+			if (i % 2 == 0) {
+				laneToAdd = fastLane;
+			} else {
+				laneToAdd = normalLane;
+			}
+			_lanes.Add ((GameObject)Instantiate (laneToAdd, Vector3.zero, Quaternion.identity));
 		}
 	}
 }
