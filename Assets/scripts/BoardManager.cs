@@ -7,22 +7,27 @@ using System.Collections.Generic;
 using System.IO;
 
 public class BoardManager : MonoBehaviour {
-	/* Lane and Key prefab */
-	public GameObject normalLane;
-	public GameObject fastLane;
-
+	/* Key prefabs */
 	public GameObject normalKey;
 	public GameObject dmgKey;
 	public GameObject healKey;
 
+	/* Lane prefabs */
+	public GameObject normalLane;
+	public GameObject fastLane;
+
 	public GameObject laneEnd;
 
-	public int numLanes;
-
+	[SerializeField]
+	private string storyFile;
 	private StreamReader story;
 	private Text inputDisplay;
-	private List<GameObject> _lanes;
 	private StringBuilder inputText;
+
+	[SerializeField]
+	private List<GameObject> lanesToInstantiate;
+	private List<GameObject> _lanes;
+	private int numLanes;
 
 	private SpriteRenderer boardSR;
 	private float boardWidth;
@@ -31,6 +36,8 @@ public class BoardManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_lanes = new List<GameObject> ();
+		numLanes = _lanes.Count;
+
 		inputText = new StringBuilder ();
 		inputDisplay = GameObject.Find ("InputDisplay").GetComponent<Text> ();
 
@@ -38,9 +45,8 @@ public class BoardManager : MonoBehaviour {
 		boardWidth = boardSR.bounds.size.x;
 		boardHeight = boardSR.bounds.size.y;
 
-
-		FillBoard ();
-		ParseStory ("Assets/stories/jackjill.txt");
+		//FillBoard ();
+		ParseStory ("Assets/stories/" + storyFile + ".txt");
 		PositionPieces ();
 	}
 	
@@ -169,14 +175,8 @@ public class BoardManager : MonoBehaviour {
 
 	/* Fill _LANES with lanes */
 	void FillBoard() {
-		GameObject laneToAdd;
-		for (int i = 0; i < numLanes; i++) {
-			if (i % 2 == 0) {
-				laneToAdd = fastLane;
-			} else {
-				laneToAdd = normalLane;
-			}
-			_lanes.Add ((GameObject)Instantiate (laneToAdd, Vector3.zero, Quaternion.identity));
+		for (int i = lanesToInstantiate.Count - 1; i >= 0; i--) {
+			_lanes.Add ((GameObject)Instantiate (lanesToInstantiate[i], Vector3.zero, Quaternion.identity));
 		}
 	}
 }
