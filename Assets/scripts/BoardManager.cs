@@ -12,9 +12,9 @@ public class BoardManager : MonoBehaviour {
 	public GameObject dmgKey;
 	public GameObject healKey;
 
-	/* Lane prefabs */
-	public GameObject normalLane;
-	public GameObject fastLane;
+//	/* Lane prefabs */
+//	public GameObject normalLane;
+//	public GameObject fastLane;
 
 	public GameObject laneEnd;
 
@@ -36,7 +36,7 @@ public class BoardManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_lanes = new List<GameObject> ();
-		numLanes = _lanes.Count;
+		numLanes = lanesToInstantiate.Count;
 
 		inputText = new StringBuilder ();
 		inputDisplay = GameObject.Find ("InputDisplay").GetComponent<Text> ();
@@ -45,7 +45,7 @@ public class BoardManager : MonoBehaviour {
 		boardWidth = boardSR.bounds.size.x;
 		boardHeight = boardSR.bounds.size.y;
 
-		//FillBoard ();
+		CreateLanes ();
 		ParseStory ("Assets/stories/" + storyFile + ".txt");
 		PositionPieces ();
 	}
@@ -74,9 +74,6 @@ public class BoardManager : MonoBehaviour {
 
 	/* Instantiate the necessary lanes and keys and position them in the game board, resizing as necessary. */
 	void PositionPieces() {
-
-		Instantiate(laneEnd, transform.position + Vector3.left * (boardWidth / 2), Quaternion.identity);
-
 		float newLaneWidth = boardWidth;
 		float newLaneHeight = boardHeight / numLanes;
 		float laneSpacing = newLaneHeight / 6;
@@ -98,6 +95,19 @@ public class BoardManager : MonoBehaviour {
 			float newLaneHeightScale = newLaneHeight / laneHeight;
 			l.transform.localScale = new Vector3 (newLaneWidthScale * l.transform.localScale.x,
 												newLaneHeightScale * l.transform.localScale.y);
+		
+			GameObject newLaneEnd;
+			bool isReverseLane = l.GetComponent<Lane> ().Speed < 0;
+
+			if (isReverseLane) {
+				newLaneEnd = (GameObject) Instantiate (laneEnd, lanePos + Vector3.right * (newLaneWidth / 2), Quaternion.identity);
+			} else {
+				newLaneEnd = (GameObject) Instantiate(laneEnd, lanePos + Vector3.left * (newLaneWidth / 2), Quaternion.identity);
+			}
+			SpriteRenderer laneEndSR = newLaneEnd.GetComponent<SpriteRenderer> ();
+			float newLaneEndHeightScale = newLaneHeight / laneEndSR.bounds.size.y;
+			newLaneEnd.transform.localScale = new Vector3 (newLaneEnd.transform.localScale.x,
+														newLaneEndHeightScale * newLaneEnd.transform.localScale.y);
 
 			Vector3 keyPos = Vector3.zero;
 
@@ -122,9 +132,17 @@ public class BoardManager : MonoBehaviour {
 				float newKeyBackgroundHeight = newLaneHeight - keyTopBotPadding;
 
 				if (keyPos == Vector3.zero) {
-					keyPos = l.transform.position + (Vector3.right * ((newLaneWidth + newKeyBackgroundWidth) / 2));
+					if (isReverseLane) {
+						keyPos = l.transform.position - (Vector3.right * ((newLaneWidth + newKeyBackgroundWidth) / 2));
+					} else {
+						keyPos = l.transform.position + (Vector3.right * ((newLaneWidth + newKeyBackgroundWidth) / 2));
+					}
 				} else {
-					keyPos += Vector3.right * (newKeyBackgroundWidth / 2 + keyOffset);
+					if (isReverseLane) {
+						keyPos -= Vector3.right * (newKeyBackgroundWidth / 2 + keyOffset);
+					} else {
+						keyPos += Vector3.right * (newKeyBackgroundWidth / 2 + keyOffset);
+					}
 				}
 
 				k.transform.position = keyPos;
@@ -134,9 +152,12 @@ public class BoardManager : MonoBehaviour {
 														newKeyBackgroundHeightScale * keyBackground.localScale.y);
 				keyCollider.size = new Vector2 (newKeyBackgroundWidth, newKeyBackgroundHeight) * 2.25f;
 
-				keyPos += Vector3.right * (newKeyBackgroundWidth / 2);
+				if (isReverseLane) {
+					keyPos -= Vector3.right * (newKeyBackgroundWidth / 2);
+				} else {
+					keyPos += Vector3.right * (newKeyBackgroundWidth / 2);
+				}
 			}
-
 			lanePos += Vector3.up * (newLaneHeight + laneSpacing);
 		}
 	}
@@ -174,8 +195,8 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	/* Fill _LANES with lanes */
-	void FillBoard() {
-		for (int i = lanesToInstantiate.Count - 1; i >= 0; i--) {
+	void CreateLanes() {
+		for (int i = numLanes - 1; i >= 0; i--) {
 			_lanes.Add ((GameObject)Instantiate (lanesToInstantiate[i], Vector3.zero, Quaternion.identity));
 		}
 	}

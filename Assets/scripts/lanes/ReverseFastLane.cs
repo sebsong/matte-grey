@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class FastLane : MonoBehaviour, Lane {
+public class ReverseFastLane : MonoBehaviour, Lane {
 	public List<GameObject> Keys { get; set; }
 	public bool IsActive { get; set; }
 	public float Speed { get; set; }
@@ -10,7 +10,7 @@ public class FastLane : MonoBehaviour, Lane {
 	// Use this for initialization
 	void Awake () {
 		Keys = new List<GameObject> ();
-		Speed = 1f;
+		Speed = -1f;
 		IsActive = true;
 	}
 
