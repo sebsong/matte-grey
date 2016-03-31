@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PlayerHealthController : MonoBehaviour {
@@ -18,5 +19,8 @@ public class PlayerHealthController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		healthSlider.value = player.Health;
+		if (player.Health <= 0) {
+			SceneManager.LoadScene (2);
+		}
 	}
 }

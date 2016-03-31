@@ -7,7 +7,7 @@ public class MainMenuController : MonoBehaviour {
 	
 	public void OnStart() {
 		Debug.Log ("Start Button pressed");
-		SceneManager.LoadScene (2);
+		SceneManager.LoadScene (3);
 	}
 
 	public void OnHiScores() {

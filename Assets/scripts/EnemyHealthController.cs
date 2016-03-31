@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class EnemyHealthController : MonoBehaviour {
@@ -16,5 +17,9 @@ public class EnemyHealthController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		healthSlider.value = enemy.Health;
+		if (enemy.Health <= 0) {
+			int nextScene = SceneManager.GetActiveScene ().buildIndex + 1;
+			SceneManager.LoadScene (nextScene);
+		}
 	}
 }
