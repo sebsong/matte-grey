@@ -7,9 +7,11 @@ public class HealKey : MonoBehaviour, Key {
 	public Lane parentLane { get; set; }
 
 	PlayerController player;
+	EnemyController enemy;
 
 	void Start() {
 		player = GameObject.FindGameObjectWithTag ("player").GetComponent<PlayerController> ();
+		enemy = GameObject.FindGameObjectWithTag ("enemy").GetComponent<EnemyController> ();
 	}
 
 	public void CastSpell() {
@@ -18,6 +20,7 @@ public class HealKey : MonoBehaviour, Key {
 	}
 
 	public void HitEnd () {
+		enemy.TakeDamage (-3);
 		parentLane.Keys.Remove (gameObject);
 		gameObject.SetActive (false);
 	}

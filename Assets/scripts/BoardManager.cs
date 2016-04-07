@@ -168,7 +168,7 @@ public class BoardManager : MonoBehaviour {
 		string storyText = story.ReadToEnd ();
 		story.Close ();
 
-		Regex replaceReg = new Regex ("[.,()!?@#$%^&*\n\r]");
+		Regex replaceReg = new Regex ("[.,()!?@#$%^&*\"\n\r]");
 		storyText = replaceReg.Replace (storyText, " ");
 
 		string[] keyTexts = storyText.Split (new char[] {' '}, System.StringSplitOptions.RemoveEmptyEntries);
