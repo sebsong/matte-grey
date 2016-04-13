@@ -12,10 +12,6 @@ public class BoardManager : MonoBehaviour {
 	public GameObject dmgKey;
 	public GameObject healKey;
 
-//	/* Lane prefabs */
-//	public GameObject normalLane;
-//	public GameObject fastLane;
-
 	public GameObject laneEnd;
 
 	[SerializeField]
@@ -23,6 +19,9 @@ public class BoardManager : MonoBehaviour {
 	private StreamReader story;
 	private Text inputDisplay;
 	private StringBuilder inputText;
+
+	private Dictionary<string, GameObject> codeToKey;
+	private int codeLength = 2;
 
 	[SerializeField]
 	private List<GameObject> lanesToInstantiate;
@@ -37,6 +36,12 @@ public class BoardManager : MonoBehaviour {
 	void Start () {
 		_lanes = new List<GameObject> ();
 		numLanes = lanesToInstantiate.Count;
+
+		codeToKey = new Dictionary<string, GameObject> () {
+			{"00", normalKey},
+			{"01", dmgKey},
+			{"02", healKey}
+		};
 
 		inputText = new StringBuilder ();
 		inputDisplay = GameObject.Find ("InputDisplay").GetComponent<Text> ();
@@ -179,17 +184,23 @@ public class BoardManager : MonoBehaviour {
 	/* Fill each lane in _LANES with KEYS. */
 	void FillLanes(string[] keyTexts) {
 		GameObject keyToAdd;
+		string code;
 		if (_lanes.Count > 0) {
 			foreach (string keyText in keyTexts) {
+				string textToAdd = keyText;
 				int laneIndex = Random.Range (0, _lanes.Count);
-				if (laneIndex % 2 == 0) {
-					keyToAdd = (GameObject)Instantiate (dmgKey, Vector3.zero, Quaternion.identity);
-				} else{ //if (laneIndex % 3 == 1) {
-					keyToAdd = (GameObject)Instantiate (healKey, Vector3.zero, Quaternion.identity);
-				} //else {
-//					keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
-//				}
-				_lanes [laneIndex].GetComponent<Lane> ().AddKey (keyToAdd, keyText);
+				if (keyText.Length >= 2) {
+					code = keyText.Substring (0, codeLength);
+				} else {
+					code = "";
+				}
+				if (codeToKey.ContainsKey (code)) {
+					keyToAdd = (GameObject)Instantiate (codeToKey [code], Vector3.zero, Quaternion.identity);
+					textToAdd = keyText.Substring (codeLength, keyText.Length - codeLength);
+				} else {
+					keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
+				}
+				_lanes [laneIndex].GetComponent<Lane> ().AddKey (keyToAdd, textToAdd);
 			}
 		}
 	}

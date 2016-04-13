@@ -7,12 +7,19 @@ public class NormalKey : MonoBehaviour, Key {
 
 	public Lane parentLane { get; set; }
 
+	PlayerController player;
+
+	void Start() {
+		player = GameObject.FindGameObjectWithTag ("player").GetComponent<PlayerController> ();
+	}
+
 	public void CastSpell() {
 		/* Do nothing */
 		gameObject.SetActive (false);
 	}
 
 	public void HitEnd () {
+		player.TakeDamage (2);
 		parentLane.Keys.Remove (gameObject);
 		gameObject.SetActive (false);
 	}
