@@ -6,6 +6,8 @@ public class HealKey : MonoBehaviour, Key {
 
 	public Lane parentLane { get; set; }
 
+	public AudioClip keyCastClip;
+
 	PlayerController player;
 	EnemyController enemy;
 
@@ -20,6 +22,7 @@ public class HealKey : MonoBehaviour, Key {
 	}
 
 	public void HitEnd () {
+		AudioSource.PlayClipAtPoint (keyCastClip, transform.position);
 		enemy.TakeDamage (-3);
 		parentLane.Keys.Remove (gameObject);
 		gameObject.SetActive (false);

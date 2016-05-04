@@ -7,6 +7,8 @@ public class NormalKey : MonoBehaviour, Key {
 
 	public Lane parentLane { get; set; }
 
+	public AudioClip keyCastClip;
+
 	PlayerController player;
 
 	void Start() {
@@ -19,6 +21,7 @@ public class NormalKey : MonoBehaviour, Key {
 	}
 
 	public void HitEnd () {
+		AudioSource.PlayClipAtPoint (keyCastClip, transform.position);
 		player.TakeDamage (2);
 		parentLane.Keys.Remove (gameObject);
 		gameObject.SetActive (false);

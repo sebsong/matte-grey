@@ -195,11 +195,12 @@ public class BoardManager : MonoBehaviour {
 					code = "";
 				}
 				if (codeToKey.ContainsKey (code)) {
-					keyToAdd = (GameObject)Instantiate (codeToKey [code], Vector3.zero, Quaternion.identity);
 					textToAdd = keyText.Substring (codeLength, keyText.Length - codeLength);
 				} else {
-					keyToAdd = (GameObject)Instantiate (normalKey, Vector3.zero, Quaternion.identity);
+					int randCode = Random.Range (0, 3);
+					code = "0" + randCode;
 				}
+				keyToAdd = (GameObject)Instantiate (codeToKey [code], Vector3.zero, Quaternion.identity);
 				_lanes [laneIndex].GetComponent<Lane> ().AddKey (keyToAdd, textToAdd);
 			}
 		}

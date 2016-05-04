@@ -6,6 +6,8 @@ public class DamageKey : MonoBehaviour, Key {
 
 	public Lane parentLane { get; set; }
 
+	public AudioClip keyCastClip;
+
 	PlayerController player;
 	EnemyController enemy;
 
@@ -20,6 +22,7 @@ public class DamageKey : MonoBehaviour, Key {
 	}
 
 	public void HitEnd () {
+		AudioSource.PlayClipAtPoint (keyCastClip, transform.position);
 		player.TakeDamage (5);
 		parentLane.Keys.Remove (gameObject);
 		gameObject.SetActive (false);
