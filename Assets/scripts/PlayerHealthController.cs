@@ -20,7 +20,7 @@ public class PlayerHealthController : MonoBehaviour {
 	void Update () {
 		healthSlider.value = player.Health;
 		if (player.Health <= 0) {
-			SceneManager.LoadScene (2);
+			Utils.GameOver ();
 		}
 	}
 }

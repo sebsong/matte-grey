@@ -18,8 +18,7 @@ public class EnemyHealthController : MonoBehaviour {
 	void Update () {
 		healthSlider.value = enemy.Health;
 		if (enemy.Health <= 0) {
-			int nextScene = SceneManager.GetActiveScene ().buildIndex + 1;
-			SceneManager.LoadScene (nextScene);
+			Utils.LoadNextScene ();
 		}
 	}
 }

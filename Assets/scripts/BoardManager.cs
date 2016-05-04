@@ -70,6 +70,8 @@ public class BoardManager : MonoBehaviour {
 			if (inputText.Length > 0) {
 				inputText.Remove (inputText.Length - 1, 1);
 			}
+		} else if (Input.GetKeyDown("0")) {
+			Utils.LoadNextScene ();
 		} else {
 			foreach (char c in Input.inputString) {
 				inputText.Append (c);
