@@ -4,12 +4,12 @@ using System.Collections;
 public class HealKey : Key {
 
 	public override void CastSpell() {
-		player.TakeDamage (-5);
+		player.TakeDamage (-4);
 		base.CastSpell ();
 	}
 
 	public override void HitEnd () {
-		enemy.TakeDamage (-3);
+		enemy.TakeDamage (-7);
 		base.HitEnd ();
 	}
 }

@@ -9,7 +9,7 @@ public class DamageKey : Key {
 	}
 
 	public override void HitEnd () {
-		player.TakeDamage (5);
+		player.TakeDamage (7);
 		base.HitEnd ();
 	}
 }
