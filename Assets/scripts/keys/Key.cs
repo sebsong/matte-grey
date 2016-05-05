@@ -11,6 +11,9 @@ public abstract class Key : MonoBehaviour {
 	/* Audio clip to be played when key hits a laneEnd */
 	public AudioClip keyHitClip;
 
+	/* Audio clip to be played when key casts spell */
+	public AudioClip keyCastClip;
+
 	/* Player and enemy script references */
 	protected PlayerController player;
 	protected EnemyController enemy;
@@ -22,6 +25,7 @@ public abstract class Key : MonoBehaviour {
 
 	/* Effect when typed */
 	public virtual void CastSpell() {
+		AudioSource.PlayClipAtPoint (keyCastClip, transform.position);
 		gameObject.SetActive (false);
 	}
 
