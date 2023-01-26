@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections;
@@ -33,7 +34,7 @@ public class BoardManager : MonoBehaviour {
 	private float boardHeight;
 
 	// Use this for initialization
-	void Start () {
+	IEnumerator Start () {
 		_lanes = new List<GameObject> ();
 		numLanes = lanesToInstantiate.Count;
 
@@ -51,7 +52,7 @@ public class BoardManager : MonoBehaviour {
 		boardHeight = boardSR.bounds.size.y;
 
 		CreateLanes ();
-		ParseStory ("Assets/stories/" + storyFile + ".txt");
+		yield return ParseStory ("stories/" + storyFile + ".txt");
 		PositionPieces ();
 	}
 	
@@ -170,10 +171,20 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	/* Parse story stored at FILEPATH, instantiate keys from STORYTEXT, and populate _LANES. */
-	void ParseStory(string filePath) {
-		story = new StreamReader (filePath);
-		string storyText = story.ReadToEnd ();
-		story.Close ();
+	IEnumerator ParseStory(string storyFilePath) {
+		string storyText = "";
+		IEnumerator downloadStory() {
+			string path = Path.Combine(Application.streamingAssetsPath, storyFilePath);
+			if (path.Contains("http")) {
+				using (UnityWebRequest request = UnityWebRequest.Get(path)) {
+					yield return request.SendWebRequest();
+					storyText = request.downloadHandler.text;
+				}
+			} else {
+				storyText = File.ReadAllText(path);
+			}
+		}
+		yield return StartCoroutine(downloadStory());
 
 		Regex replaceReg = new Regex ("[.,()!?@#$%^&*\"\n\r]");
 		storyText = replaceReg.Replace (storyText, " ");
